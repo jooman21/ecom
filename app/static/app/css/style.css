@@ -1,0 +1,66 @@
+.milk img {
+    width: 100%;
+}
+
+.container {
+    margin-top: 3vh;
+}
+
+.content {
+    display: flex;
+    margin-top: 5vh;
+}
+
+.center {
+    text-align: center;
+}
+
+.juice {
+    background-color: #fff;
+    background-image: linear-gradient(#3ff7ef, #fff);
+    background-image: -webkit-linear-gradient(#3ff7ef, #fff);
+    background-image: -moz-linear-gradient(#3ff7ef, #fff);
+    background-image: -moz-linear-gradient(#3ff7ef, #fff);
+    background-image: -o-linear-gradient(#3ff7ef, #fff);
+    padding: 50px 40px;
+    border: 1px solid #efe8e1;
+    padding-bottom: 20px;
+}
+
+.shake {
+    background-color: #fff;
+    background-image: linear-gradient(#f7bd3f, #fff);
+    background-image: -webkit-linear-gradient(#f7bd3f, #fff);
+    background-image: -moz-linear-gradient(#f7bd3f, #fff);
+    background-image: -moz-linear-gradient(#f7bd3f, #fff);
+    background-image: -o-linear-gradient(#f7bd3f, #fff);
+    padding: 50px 40px;
+    border: 1px solid #efe8e1;
+    padding-bottom: 20px;
+}
+
+.chesse {
+    background-color: #fff;
+    background-image: linear-gradient(#f7bd3f, #fff);
+    background-image: -webkit-linear-gradient(#f7bd3f, #fff);
+    background-image: -moz-linear-gradient(#f7bd3f, #fff);
+    background-image: -moz-linear-gradient(#f7bd3f, #fff);
+    background-image: -o-linear-gradient(#f7bd3f, #fff);
+    padding: 50px 40px;
+    border: 1px solid #efe8e1;
+    padding-bottom: 20px;
+}
+
+.milkpro {
+    color: #636362;
+    font-size: 22px;
+    line-height: 22px;
+    margin-bottom: 15px;
+    width: 43px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.img-milk a {
+    text-decoration: none;
+}

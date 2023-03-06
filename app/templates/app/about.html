@@ -1,0 +1,40 @@
+{% extends 'app/base.html' %} 
+{% load static %}
+
+{% block title %}About{% endblock title %}
+{% block banner-slider %}
+<div class="car d-flex justify-content-center mt-4">
+    <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="{% static 'app/image/banner/ch_123.jpg' %}" class="d-block w-35" alt="banner-image">
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'app/image/banner/ice_2.jpg' %}" class="d-block w-35" alt="banner-image">
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'app/image/banner/ju_1.jpg' %}" class="d-block w-35" alt="banner-image">
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'app/image/banner/mil_3.jpg' %}" class="d-block w-35" alt="banner-image">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock banner-slider %}
+{% block main-content %}
+<div class="container mt-3 mb-5">
+    <br>
+    <h2 class="text-center">About Us</h2>
+    <br>
+    <div class="row container">
+        <p class="fs-4 text-center">Welcome to our online supermarket! We are a team of passionate individuals who are dedicated to providing you with a convenient and hassle-free shopping experience. Our website offers a wide variety of high-quality products at affordable prices, ranging from fresh produce to household essentials. With our user-friendly interface and efficient delivery system, we strive to make your grocery shopping experience as seamless as possible. Thank you for choosing us as your go-to destination for all your grocery needs.</p>
+        <br><br>
+        <h2 class="text-center">Missions</h2>
+        <div class="row container ">
+            <p class="fs-4 text-center">Our mission is to provide our customers with the highest quality products at affordable prices, while delivering exceptional customer service and a convenient shopping experience. We are committed to sourcing our products ethically and sustainably, and to reducing our environmental impact through responsible business practices.</p>
+        </div>
+    </div>
+</div>
+<br><br>
+{% endblock main-content %}
