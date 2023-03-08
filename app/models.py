@@ -54,3 +54,29 @@ class Customer(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    @property
+    def total_cost(self):
+        return self.quantity * self.product.discounted_price
+
+    # def add_item(self, product, quantity):
+    #     self.quantity += quantity
+    #     self.save()
+
+    # def remove_item(self, product, quantity):
+    #     if self.quantity <= quantity:
+    #         self.delete()
+    #     else:
+    #         self.quantity -= quantity
+    #         self.save()
+
+    # @staticmethod
+    # def get_total_cost_with_tax(cart_items):
+    #     total_cost = sum(item.total_cost for item in cart_items)
+    #     return total_cost * 1.15
