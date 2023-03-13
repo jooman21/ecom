@@ -65,18 +65,38 @@ class Cart(models.Model):
     def total_cost(self):
         return self.quantity * self.product.discounted_price
 
-    # def add_item(self, product, quantity):
-    #     self.quantity += quantity
-    #     self.save()
 
-    # def remove_item(self, product, quantity):
-    #     if self.quantity <= quantity:
-    #         self.delete()
-    #     else:
-    #         self.quantity -= quantity
-    #         self.save()
+class Payment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.FloatField()
+    paypal_order_id = models.CharField(max_length=100, blank=True, null=True)
+    paypal_payment_status = models.CharField(
+        max_length=100, blank=True, null=True)
+    paypal_payment_id = models.CharField(max_length=100, blank=True, null=True)
+    paid = models.BooleanField(default=False)
 
-    # @staticmethod
-    # def get_total_cost_with_tax(cart_items):
-    #     total_cost = sum(item.total_cost for item in cart_items)
-    #     return total_cost * 1.15
+
+STATUS_CHOICES = [
+    ('Accepted', 'Accepted'),
+    ('Packed', 'Packed'),
+    ('On the way', 'On the Way'),
+    ('Delivered', 'Delivered'),
+    ('Cancel', 'Cancel'),
+    ('Pending', 'Pending'),
+]
+
+
+class OrderPlaced(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    ordered_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(
+        max_length=50, choices=STATUS_CHOICES, default='Pending')
+    payment = models.ForeignKey(
+        Payment, on_delete=models.CASCADE, default="")
+
+    @property
+    def total_cost(self):
+        return self.quantity * self.product.discounted_price
