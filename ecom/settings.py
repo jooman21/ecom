@@ -42,6 +42,10 @@ INSTALLED_APPS = [
     'app',
 ]
 
+PAYPAL_MODE = 'sandbox'  # Change to 'live' for production
+PAYPAL_CLIENT_ID = 'your_paypal_client_id'
+PAYPAL_CLIENT_SECRET = 'your_paypal_client_secret'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
