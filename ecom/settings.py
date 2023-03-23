@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'fontawesomefree',
     'app',
+    'paypal.standard.ipn',
+    'paypalrestsdk',
+
 ]
 
 PAYPAL_MODE = 'sandbox'  # Change to 'live' for production
@@ -131,3 +134,7 @@ LOGIN_REDIRECT_URL = '/profile/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+
+PAYPAL_CLIENT_ID = "AZGPfZL7-TbgPFaUe1jzzVjq28eVmT-3As8MENt01EWYdyTtUEb_bf3C1N46k_BMbic1wyJWKwJchWnB"
+PAYPAL_CLIENT_SECRET = "EARMlTi9uu82-tRJ_L9dBHdiEwKeIQZrlS_-auonUnbUrHWnFubXXskQnmF4meCoqhdAxj22Mji0CivE"

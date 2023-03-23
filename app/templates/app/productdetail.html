@@ -1,6 +1,6 @@
 {% extends 'app/base.html' %} 
 {% load static %}
-
+{% include 'footer.html'%}
 {% block title %}Category{% endblock title %}
 {% block main-content %} 
 <div class="container mb-5">
@@ -13,15 +13,20 @@
           <h1 style="font-family: Georgia; font-size:50px;">{{product.title}}</h1>
           <h5>Birr.{{ product.discounted_price }}/-</h5>
           <small class="text-decoration-line-through text-muted fs-5"><del>Birr. {{ product.selling_price }}/-</small></del>
+        
           <br><br><h4>Product Features</h4>
           <ul class="fs-5" style="font-family: Rajdhani;">
             <li>{{product.description}}</li>
           </ul>
+          {% if item_already_in_cart %}
+          <a href="{% url 'showcart' %}" class="btn btn-warning shadow px-5 py-2 ms-4"> Go To Cart</a>
+          {% else %}
             <form action="/add-to-cart" class="d-inline">
               <input type="hidden" name="prod_id" value={{product.id}} />
               <button type="submit" class="btn btn-primary shadow px-5 py-2">Add to Cart</button>
             </form>
-         <a href="{% url 'showcart' %}" class="btn btn-warning shadow px-5 py-2 ms-4">Buy Now</a> 
+            {% endif %}
+         <a href="{% url 'checkout' %}" class="btn btn-danger shadow px-5 py-2 ms-4">Buy Now</a> 
        </div>
     <div>
 </div>

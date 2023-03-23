@@ -6,44 +6,98 @@ from django.views.generic import View
 from .models import *
 from .forms import CustomerRegistrationForm, CustomerProfileForm
 from django.contrib import messages
+from django.conf import settings
+import paypalrestsdk
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.db.models import Q
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 
+# then use it like this
+# client = paypalrestsdk.Client(
+#     client_id=settings.PAYPAL_CLIENT_ID,
+#     client_secret=settings.PAYPAL_CLIENT_SECRET
+# )
+
+@login_required
 def home(request):
-    return render(request, "app/home.html")
+    totalitem = 0
+    if request.user.is_authenticated:
+        totalitem = len(Cart.objects.filter(user=request.user))
+    return render(request, "app/home.html", locals())
 
 
+@login_required
 def about(request):
-    return render(request, "app/about.html")
+    totalitem = 0
+    if request.user.is_authenticated:
+        totalitem = len(Cart.objects.filter(user=request.user))
+    return render(request, "app/about.html", locals())
 
 
+@login_required
 def contact(request):
-    return render(request, "app/contact.html")
+    totalitem = 0
+    if request.user.is_authenticated:
+        totalitem = len(Cart.objects.filter(user=request.user))
+    return render(request, "app/contact.html", locals())
 
 
+@method_decorator(login_required, name='dispatch')
+class ProductView(View):
+    def get(self, request):
+        totalitem = 0
+        if request.user.is_authenticated:
+            totalitem = len(Cart.objects.filter(user=request.user))
+        return render("app/home.html", locals())
+
+
+@method_decorator(login_required, name='dispatch')
 class CategoryView(View):
     def get(self, request, val):
+
         product = Product.objects.filter(category=val)
         title = Product.objects.filter(category=val).values('title')
-        return render(request, "app/category.html", locals())
+        totalitem = 0
+        if request.user.is_authenticated:
+            totalitem = len(Cart.objects.filter(user=request.user))
+        return render(request, "app/category.html",  locals())
 
 
+@method_decorator(login_required, name='dispatch')
 class CategoryTitle(View):
     def get(self, request, val):
         product = Product.objects.filter(title=val)
         title = Product.objects.filter(
             category=product[0].category).values('title')
+        totalitem = 0
+        if request.user.is_authenticated:
+            totalitem = len(Cart.objects.filter(user=request.user))
         return render(request, "app/category.html", locals())
 
 
+@method_decorator(login_required, name='dispatch')
 class ProductDetail(View):
     def get(self, request, pk):
         product = Product.objects.get(pk=pk)
-        return render(request, "app/productdetail.html", locals())
+        item_already_in_cart = False
+        item_already_in_cart = Cart.objects.filter(
+            Q(product=product.id) & Q(user=request.user)).exists()
+        totalitem = 0
+        if request.user.is_authenticated:
+            totalitem = len(Cart.objects.filter(user=request.user))
+        return render(request, "app/productdetail.html", {'product': product, 'item_already_in_cart': item_already_in_cart, 'totalitem': totalitem})
 
 
 class CustomerRegistrationView(View):
     def get(self, request):
         form = CustomerRegistrationForm()
+        totalitem = 0
+        if request.user.is_authenticated:
+            totalitem = len(Cart.objects.filter(user=request.user))
         return render(request, 'app/Customerregistraion.html', locals())
 
     def post(self, request):
@@ -54,12 +108,19 @@ class CustomerRegistrationView(View):
                 request, "Congratulation! User Register Successfully")
         else:
             messages.warning(request, "Invalid Input Data")
+            totalitem = 0
+        if request.user.is_authenticated:
+            totalitem = len(Cart.objects.filter(user=request.user))
         return render(request, 'app/Customerregistraion.html', locals())
 
 
+@method_decorator(login_required, name='dispatch')
 class ProfileView(View):
     def get(self, request):
         form = CustomerProfileForm()
+        totalitem = 0
+        if request.user.is_authenticated:
+            totalitem = len(Cart.objects.filter(user=request.user))
         return render(request, 'app/profile.html', locals())
 
     def post(self, request):
@@ -79,18 +140,29 @@ class ProfileView(View):
                 request, "Congratulations! Profile Save Successfully ")
         else:
             messages.warning(request, "Invalid Input Data")
+        totalitem = 0
+        if request.user.is_authenticated:
+            totalitem = len(Cart.objects.filter(user=request.user))
         return render(request, 'app/profile.html', locals())
 
 
+@login_required
 def address(request):
     add = Customer.objects.filter(user=request.user)
+    totalitem = 0
+    if request.user.is_authenticated:
+        totalitem = len(Cart.objects.filter(user=request.user))
     return render(request, 'app/address.html', locals())
 
 
+@method_decorator(login_required, name='dispatch')
 class updateAddress(View):
     def get(self, request, pk):
         add = Customer.objects.get(pk=pk)
         form = CustomerProfileForm(instance=add)
+        totalitem = 0
+        if request.user.is_authenticated:
+            totalitem = len(Cart.objects.filter(user=request.user))
         return render(request, 'app/updateAddress.html', locals())
 
     def post(self, request, pk):
@@ -111,6 +183,7 @@ class updateAddress(View):
         return redirect(address)
 
 
+@login_required
 def add_to_cart(request):
     user = request.user
     product_id = request.GET.get('prod_id')
@@ -121,6 +194,7 @@ def add_to_cart(request):
     return redirect("/cart")
 
 
+@method_decorator(login_required, name='dispatch')
 class checkout(View):
     def get(self, request):
         user = request.user
@@ -132,9 +206,35 @@ class checkout(View):
             value = p.quantity * p.product.discounted_price
             famount = famount + value
         totalamount = famount + 40
+        totalitem = 0
+        if request.user.is_authenticated:
+            totalitem = len(Cart.objects.filter(user=request.user))
         return render(request, 'app/checkout.html', locals())
 
 
+@login_required
+def payment_done(request):
+    user = request.user
+    custid = request.GET.get('custid')
+    customer = Customer.objects.get(id=custid)
+    cart = Cart.objects.filter(user=user)
+    for c in cart:
+        OrderPlaced(user=user, customer=customer,
+                    product=c.product, quantity=c.quantity).save()
+        c.delete()
+    return redirect("orders")
+
+
+@login_required
+def orders(request):
+    order_placed = OrderPlaced.objects.filter(user=request.user)
+    totalitem = 0
+    if request.user.is_authenticated:
+        totalitem = len(Cart.objects.filter(user=request.user))
+    return render(request, 'app/orders.html', locals())
+
+
+@login_required
 def show_cart(request):
     user = request.user
     cart = Cart.objects.filter(user=user)
@@ -143,9 +243,13 @@ def show_cart(request):
         value = p.quantity * p.product.discounted_price
         amount = amount + value
         totalamount = amount + 40
+        totalitem = 0
+    if request.user.is_authenticated:
+        totalitem = len(Cart.objects.filter(user=request.user))
     return render(request, 'app/addtocart.html', locals())
 
 
+@login_required
 def plus_cart(request):
     if request.method == 'GET':
         prod_id = request.GET['prod_id']
@@ -169,6 +273,7 @@ def plus_cart(request):
         return JsonResponse(data)
 
 
+@login_required
 def minus_cart(request):
     if request.method == 'GET':
         prod_id = request.GET['prod_id']
@@ -192,6 +297,7 @@ def minus_cart(request):
         return JsonResponse(data)
 
 
+@login_required
 def remove_cart(request):
     if request.method == 'GET':
         prod_id = request.GET['prod_id']
@@ -213,31 +319,11 @@ def remove_cart(request):
         }
         return JsonResponse(data)
 
-# def remove_cart(request):
-#     if request.method == 'GET':
-#         prod_id = request.GET.get('prod_id')
-#         c = Cart.objects.filter(Q(product=prod_id) &
-#                                 Q(user=request.user)).first()
 
-#         c.delete()
-#         user = request.user
-#         cart = Cart.objects.filter(user=user)
-#         amount = 0
-
-#         for p in cart:
-#             value = p.quantity * p.product.discounted_price
-#             amount = amount + value
-
-#         if not cart:
-#             empty_cart_msg = 'Your cart is empty!'
-#             data = {
-#                 'empty_cart_msg': empty_cart_msg,
-#             }
-#         else:
-#             totalamount = amount + 40
-#             data = {
-#                 'amount': amount,
-#                 'totalamount': totalamount
-#             }
-
-#         return JsonResponse(data)
+def search(request):
+    query = request.GET['search']
+    totalitem = 0
+    if request.user.is_authenticated:
+        totalitem = len(Cart.objects.filter(user=request.user))
+    product = Product.objects.filter(Q(title__icontains=query))
+    return render(request, "app/search.html", locals())

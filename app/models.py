@@ -94,8 +94,8 @@ class OrderPlaced(models.Model):
     ordered_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
         max_length=50, choices=STATUS_CHOICES, default='Pending')
-    payment = models.ForeignKey(
-        Payment, on_delete=models.CASCADE, default="")
+    # payment = models.ForeignKey(
+    #     Payment, on_delete=models.CASCADE, default="")
 
     @property
     def total_cost(self):

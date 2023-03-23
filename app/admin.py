@@ -30,4 +30,4 @@ class PaymentModelAdmin(admin.ModelAdmin):
 class OrderPlacedModelAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'customer', 'product', 'quantity',
                     'ordered_date',
-                    'status', 'payment']
+                    'status',]
