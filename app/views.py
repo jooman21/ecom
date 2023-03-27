@@ -14,6 +14,9 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from .serializers import *
+from rest_framework.decorators import api_view
+from rest_framework import generics
 
 
 # then use it like this
@@ -327,3 +330,43 @@ def search(request):
         totalitem = len(Cart.objects.filter(user=request.user))
     product = Product.objects.filter(Q(title__icontains=query))
     return render(request, "app/search.html", locals())
+
+
+class ProductList(generics.ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
+class ProductDetails(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
+class CartList(generics.ListCreateAPIView):
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+
+
+class CartDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+
+
+class CustomerList(generics.ListCreateAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+
+
+class CustomerDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+
+
+class OrderPlacedList(generics.ListCreateAPIView):
+    queryset = OrderPlaced.objects.all()
+    serializer_class = OrderPlacedSerializer
+
+
+class OrderPlacedDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = OrderPlaced.objects.all()
+    serializer_class = OrderPlacedSerializer

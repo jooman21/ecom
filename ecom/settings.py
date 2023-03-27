@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'app',
     'paypal.standard.ipn',
     'paypalrestsdk',
+    'rest_framework',
+    'rest_framework.authtoken',
 
 ]
 
@@ -128,13 +130,13 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-LOGIN_REDIRECT_URL = '/profile/'
+LOGIN_REDIRECT_URL = '/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
 PAYPAL_CLIENT_ID = "AZGPfZL7-TbgPFaUe1jzzVjq28eVmT-3As8MENt01EWYdyTtUEb_bf3C1N46k_BMbic1wyJWKwJchWnB"
 PAYPAL_CLIENT_SECRET = "EARMlTi9uu82-tRJ_L9dBHdiEwKeIQZrlS_-auonUnbUrHWnFubXXskQnmF4meCoqhdAxj22Mji0CivE"

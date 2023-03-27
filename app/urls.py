@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import *
 from django.contrib.auth import views as auth_view
 from django.conf import settings
 from django.conf.urls.static import static
@@ -34,7 +35,15 @@ urlpatterns = [
     path('minuscart/', views.minus_cart),
     path('removecart/', views.remove_cart),
 
-
+    # implementing rest frame work
+    path('products/', ProductList.as_view(), name='product_list'),
+    path('products/<int:pk>/', ProductDetails.as_view(), name='product_detail'),
+    path('customers/', CustomerList.as_view(), name='customer_list'),
+    path('customers/<int:pk>/', CustomerDetail.as_view(), name='customer_detail'),
+    path('carts/', CartList.as_view(), name='cart_list'),
+    path('carts/<int:pk>/', CartDetail.as_view(), name='cart_detail'),
+    path('orders/', OrderPlacedList.as_view(), name='order_list'),
+    path('orders/<int:pk>/', OrderPlacedDetail.as_view(), name='order_detail'),
 
     # login authtentication
     path("registration/", views.CustomerRegistrationView.as_view(),
