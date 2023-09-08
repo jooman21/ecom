@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-q1-1p@bui#)=e1pkbubg*l)f4=rpu8!8mt1g-!*-d6&d7r10y$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["192.168.0.123","localhost"]
 
 
 # Application definition
@@ -40,8 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'fontawesomefree',
     'app',
-    'paypal.standard.ipn',
-    'paypalrestsdk',
     'rest_framework',
     'rest_framework.authtoken',
 
@@ -128,7 +126,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/static/'
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 MEDIA_URL = '/media/'
 LOGIN_REDIRECT_URL = '/'
 # Default primary key field type

@@ -7,7 +7,6 @@ from .models import *
 from .forms import CustomerRegistrationForm, CustomerProfileForm
 from django.contrib import messages
 from django.conf import settings
-import paypalrestsdk
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Q

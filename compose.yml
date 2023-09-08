@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    command: gunicorn ecom.wsgi:application --bind 0.0.0.0:8000    
+    volumes:
+      - .:/ecom
+    expose:
+      - "8000"
+
+  nginx:
+    build: ./nginx
+    container_name: nginx-container
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./app/static:/ecom/app/static 
+      - ./app/media:/ecom/app/media
+      - ./static/admin:/ecom/static/admin
+
+    depends_on:
+      - web
+
+volumes:
+  static:
+  media:
+  adminstatic:
